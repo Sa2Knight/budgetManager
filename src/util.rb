@@ -20,8 +20,8 @@ module Util
   #
   def get_monthly_date(date)
     return {
-      date_from: Date.new(date.year, date.month),
-      date_to:   Date.new(date.year, date.month, -1),
+      start_date: Date.new(date.year, date.month),
+      end_date:   Date.new(date.year, date.month, -1),
     }
   end
 

@@ -1,6 +1,7 @@
 require 'json'
 require 'pp'
 require 'oauth'
+require 'date'
 require_relative 'util'
 class Zaim
 
@@ -57,9 +58,12 @@ class Zaim
   end
 
   #
-  # 開始期間を設定
+  # 取得期間を今月に設定
   #
-  def from()
+  def current_month
+    cm = Date.today
+    @params.merge!(Util.get_monthly_date(cm))
+    self
   end
 
   #
