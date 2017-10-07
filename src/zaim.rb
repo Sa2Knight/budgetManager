@@ -1,10 +1,10 @@
 require 'json'
 require 'pp'
 require 'oauth'
+require_relative 'util'
 class Zaim
 
   API_URL = 'https://api.zaim.net/v2/'
-  PRIVATE_BUDGET   = 40000
   PRIVATE_COMMENT  = "私費"
 
   #
@@ -27,10 +27,17 @@ class Zaim
   end
 
   #
-  # リソースを出力
+  # 生リソースを出力
   #
   def show
-    p @resources
+    @resources
+  end
+
+  #
+  # リソースの合計金額を取得
+  #
+  def total
+    @resources.inject(0) {|sum, r| sum + r['amount']}
   end
 
   #
@@ -50,10 +57,16 @@ class Zaim
   end
 
   #
+  # 開始期間を設定
+  #
+  def from()
+  end
+
+  #
   # 支出一覧を取得する
   #
   def fetch
-    url = make_url("home/money", @params)
+    url = Util.make_url("home/money", @params)
     @resources = get(url)['money']
     self
   end
@@ -66,21 +79,6 @@ class Zaim
     def get(url)
       response = @access_token.get("#{API_URL}#{url}")
       JSON.parse(response.body)
-    end
-
-    #
-    # GET用のURLを生成する
-    #
-    def make_url(url , params)
-      params.each do |k , v|
-        if url.index('?').nil?
-          url += "?#{k}=#{v}"
-        else
-          url += "&#{k}=#{v}"
-        end
-      end
-      url_escape = URI.escape(url)
-      return url_escape
     end
 
 end
