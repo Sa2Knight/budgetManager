@@ -23,18 +23,39 @@ class Zaim
     access_secret = ENV['ZAIM_ACCESS_SECRET']
     @consumer = OAuth::Consumer.new(api_key, api_secret, oauth_params)
     @access_token = OAuth::AccessToken.new(@consumer, access_key, access_secret)
+    @params = {}
+  end
+
+  #
+  # リソースを出力
+  #
+  def show
+    p @resources
+  end
+
+  #
+  # 私費のみ取得するようにする
+  #
+  def privates
+    @params[:comment] = PRIVATE_COMMENT
+    self
+  end
+
+  #
+  # 支出のみ取得するようにする
+  #
+  def payments
+    @params[:mode] = :payment
+    self
   end
 
   #
   # 支出一覧を取得する
   #
-  def fetch_payments(opt = {})
-    params = {
-      mode: :payment
-    }
-    url = make_url("home/money", params)
-    @payments = get(url)['money']
-    return self
+  def fetch
+    url = make_url("home/money", @params)
+    @resources = get(url)['money']
+    self
   end
 
   private
